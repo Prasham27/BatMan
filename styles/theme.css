@@ -1,0 +1,33 @@
+:root {
+  --ink: #0A0E12;
+  --surface: #141A21;
+  --surface-2: #18202A;
+  --border: #1F2A35;
+  --signal: #FFB200;
+  --signal-dim: #B37D00;
+  --alert: #E63946;
+  --text: #E8EDF2;
+  --text-muted: #6B7785;
+
+  --font-display: 'Rajdhani', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --ease-snap: cubic-bezier(0.2, 0, 0, 1);
+  --ease-linear: linear;
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 400ms;
+
+  --hud-pad: 24px;
+  --grid-size: 32px;
+  --bracket: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+  }
+}

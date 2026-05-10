@@ -1,0 +1,57 @@
+@import url('../styles/theme.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    background-color: var(--ink);
+    color: var(--text);
+    font-family: var(--font-body), system-ui, sans-serif;
+  }
+
+  body {
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+    background-attachment: fixed;
+    background-position: 0 0;
+    background-blend-mode: normal;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--signal);
+    color: var(--ink);
+  }
+}
+
+@layer utilities {
+  .grid-overlay-soft {
+    background-image:
+      linear-gradient(to right, rgba(31, 42, 53, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(31, 42, 53, 0.08) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+  }
+}
+
+@keyframes bc-scanline-sweep {
+  0%   { transform: translateY(0);    opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bc-scanline {
+    animation: bc-scanline-sweep 4s linear infinite;
+    will-change: transform, opacity;
+  }
+}
