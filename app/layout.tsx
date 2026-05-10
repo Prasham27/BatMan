@@ -8,6 +8,7 @@ import { TelemetryStrip } from '@/components/HUD/TelemetryStrip';
 import { AmbientHum } from '@/components/effects/AmbientHum';
 import { VaultUnlock } from '@/components/effects/VaultUnlock';
 import { JokerGlitch } from '@/components/effects/JokerGlitch';
+import { TrackBeacon } from '@/components/effects/TrackBeacon';
 import { AlfredFloater } from '@/components/alfred/AlfredFloater';
 import './globals.css';
 
@@ -104,6 +105,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AmbientHum />
         <VaultUnlock />
         <JokerGlitch />
+        <TrackBeacon />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
