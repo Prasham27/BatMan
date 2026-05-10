@@ -46,6 +46,22 @@ export function BatmobilePlatform() {
           </mesh>
         );
       })}
+
+      {/* Platform-edge accent lights — small amber emitters around the rim */}
+      {Array.from({ length: 12 }).map((_, i) => {
+        const a = (i / 12) * Math.PI * 2;
+        const r = 3.45;
+        return (
+          <pointLight
+            key={`pl-${i}`}
+            position={[Math.cos(a) * r, 0.2, Math.sin(a) * r]}
+            intensity={0.18}
+            distance={1.5}
+            decay={1.5}
+            color="#FFB200"
+          />
+        );
+      })}
     </group>
   );
 }

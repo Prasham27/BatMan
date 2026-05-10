@@ -116,8 +116,11 @@ export function CaveLanding() {
     });
   }, []);
 
-  if (supported === null || phase === 'probing') return <CaveLoading />;
+  // Order matters: check WebGL support first, otherwise mobile users
+  // (where supported=false but phase stays 'probing') get stuck on the loader.
+  if (supported === null) return <CaveLoading />;
   if (!supported) return <MobileFallback />;
+  if (phase === 'probing') return <CaveLoading />;
 
   return (
     <>

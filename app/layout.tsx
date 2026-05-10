@@ -5,14 +5,15 @@ import { content } from '@/content/data';
 import { CommandPalette } from '@/components/nav/CommandPalette';
 import { PrimaryNav } from '@/components/nav/PrimaryNav';
 import { TelemetryStrip } from '@/components/HUD/TelemetryStrip';
-import { AmbientHum } from '@/components/effects/AmbientHum';
 import { VaultUnlock } from '@/components/effects/VaultUnlock';
 import { JokerGlitch } from '@/components/effects/JokerGlitch';
 import { TrackBeacon } from '@/components/effects/TrackBeacon';
 import { AlfredFloater } from '@/components/alfred/AlfredFloater';
 import './globals.css';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+// Use || (not ??) so empty-string env values fall through to the default —
+// `new URL('')` throws ERR_INVALID_URL during the build.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 const rajdhani = Rajdhani({
   subsets: ['latin'],
@@ -102,10 +103,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div id="content">{children}</div>
         <CommandPalette />
         <AlfredFloater />
-        <AmbientHum />
         <VaultUnlock />
         <JokerGlitch />
         <TrackBeacon />
+        {/* AmbientHum removed — user feedback: not useful enough to keep */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
