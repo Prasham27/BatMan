@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { WayneBranding } from './hud/WayneBranding';
 import { WelcomeBanner } from './hud/WelcomeBanner';
 import { DroneStatus } from './hud/DroneStatus';
@@ -68,6 +69,13 @@ export function CaveHUD({
         <div className="font-mono text-[10px] tracking-widest text-text-muted">
           BATCOMPUTER // v1.0
         </div>
+        <Link
+          href="/admin"
+          className="pointer-events-auto font-mono text-[10px] tracking-widest text-text-muted/70 transition-colors hover:text-signal"
+          title="Admin terminal"
+        >
+          [ ADMIN ]
+        </Link>
       </div>
 
       {/* Bottom-center: subtle console hint (replaces the BatcomputerNav box) +

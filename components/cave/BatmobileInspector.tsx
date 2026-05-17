@@ -183,7 +183,7 @@ export function BatmobileInspector({ active, onClose }: BatmobileInspectorProps)
           value={Math.round(evolution * 100)}
           onChange={(e) => setEvolution(Number(e.target.value) / 100)}
           className="w-full"
-          style={{ accentColor: '#FFB200' }}
+          style={{ accentColor: '#E63946' }}
           aria-label="Batmobile evolution timeline"
         />
       </div>
@@ -198,26 +198,36 @@ export function BatmobileInspector({ active, onClose }: BatmobileInspectorProps)
         <color attach="background" args={['#05080B']} />
         <fog attach="fog" args={['#08090c', 8, 22]} />
         <Suspense fallback={null}>
-          <ambientLight intensity={0.3} color="#1a2230" />
+          <ambientLight intensity={0.22} color="#0a1018" />
           <directionalLight
             position={[5, 8, 5]}
-            intensity={1.0}
-            color="#ffffff"
+            intensity={0.85}
+            color="#dfe8f7"
             castShadow
             shadow-mapSize-width={1024}
             shadow-mapSize-height={1024}
           />
+          {/* Cool key fill — keeps body reading as black, not warm */}
           <pointLight
             position={[-3, 3, 2]}
-            intensity={1.8}
+            intensity={1.5}
             distance={10}
-            color="#FFB200"
+            color="#7ea3ff"
           />
+          {/* Deep red rim from behind — futuristic edge accent */}
           <pointLight
             position={[3, 2, -2]}
-            intensity={1.4}
+            intensity={1.6}
             distance={10}
-            color="#7090b0"
+            color="#E63946"
+          />
+          {/* Subtle low red underglow */}
+          <pointLight
+            position={[0, -0.2, 0]}
+            intensity={1.2}
+            distance={4}
+            decay={1.6}
+            color="#E63946"
           />
           <mesh
             rotation={[-Math.PI / 2, 0, 0]}
@@ -226,17 +236,17 @@ export function BatmobileInspector({ active, onClose }: BatmobileInspectorProps)
           >
             <circleGeometry args={[4, 64]} />
             <meshStandardMaterial
-              color="#0a0d11"
+              color="#06080d"
               roughness={0.4}
-              metalness={0.6}
+              metalness={0.7}
             />
           </mesh>
           <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.49, 0]}>
             <ringGeometry args={[3.85, 4.0, 64]} />
             <meshBasicMaterial
-              color="#FFB200"
+              color="#E63946"
               transparent
-              opacity={0.7}
+              opacity={0.75}
               toneMapped={false}
               side={2}
             />

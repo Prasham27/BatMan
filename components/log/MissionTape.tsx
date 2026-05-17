@@ -311,8 +311,10 @@ export default function MissionTape({ entries, className }: MissionTapeProps) {
     return () => mq.removeEventListener('change', update);
   }, []);
 
-  // Wheel-based scroll progress while pointer is inside the canvas.
-  // Also responds to vertical scroll position for accessibility.
+  // Wheel-based scroll progress — attached to the canvas container so the
+  // outer page stops scrolling while the pointer is over the tape, AND the
+  // tape only advances when scrolling happens inside the box. preventDefault
+  // requires passive: false, so we attach the listener manually.
   useEffect(() => {
     if (isMobile || reducedMotion) return;
     const el = containerRef.current;
@@ -321,20 +323,18 @@ export default function MissionTape({ entries, className }: MissionTapeProps) {
     let internal = 0;
 
     const onWheel = (e: WheelEvent) => {
-      // Only intercept when the canvas is reasonably in view.
-      const rect = el.getBoundingClientRect();
-      const inView =
-        rect.top < window.innerHeight * 0.6 && rect.bottom > window.innerHeight * 0.4;
-      if (!inView) return;
-      // Allow page to keep scrolling normally; we just use deltaY as a tape advance signal.
+      // We're inside the box (the listener is bound to it) — capture the wheel
+      // so the page doesn't scroll past us.
+      e.preventDefault();
+      e.stopPropagation();
       internal += e.deltaY * 0.0008;
       internal = Math.max(0, Math.min(1, internal));
       cameraT.current = internal;
       setProgressLabel(Math.round(internal * 99).toString().padStart(2, '0'));
     };
 
-    window.addEventListener('wheel', onWheel, { passive: true });
-    return () => window.removeEventListener('wheel', onWheel);
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
   }, [isMobile, reducedMotion]);
 
   if (isMobile) {

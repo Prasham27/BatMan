@@ -35,7 +35,8 @@ export interface BatmobileModelProps {
   evolution?: number;
 }
 
-const ACCENT_COLOR = '#FFB200';
+const ACCENT_COLOR = '#E63946';
+const HEADLIGHT_COLOR = '#cfe6ff';
 
 interface VehiclePartProps {
   id: PartId;
@@ -118,29 +119,43 @@ export function BatmobileModel({
       -1 + Math.sin(clock.elapsedTime * 0.9) * 0.02;
   });
 
-  const baselineEmissive = evolution * 0.18;
+  const baselineEmissive = 0;
   const isHovered = (id: PartId) => hoveredPart === id;
   const isSelected = (id: PartId) => selectedPart === id;
   const partEmissive = (id: PartId) =>
     isSelected(id) ? 0.45 : isHovered(id) ? 0.25 : 0;
 
-  // Reusable material factories (so we get per-part emissive boosts).
+  // ── Evolution-driven shape parameters (Mk ↑ = more aggressive aero) ──
+  const e = evolution; // 0..1
+  const spoilerLift = e * 0.45;       // rear wing rises higher off the body
+  const spoilerWidth = 2.4 + e * 0.45; // wing widens
+  const spoilerFinH = 0.34 + e * 0.5;  // end-cap fins grow taller
+  const antennaH = 0.5 + e * 0.55;     // antenna mast gets longer
+  const antennaY = 1.85 + e * 0.28;    // its center rides higher
+  const antennaTipY = 2.12 + e * 0.55; // and the tip with it
+  const intakeScale = 1 + e * 0.55;    // side intakes thicker / longer
+  const noseExtend = e * 0.35;         // front nose lengthens slightly
+  const noseTipShift = e * 0.25;       // tip slides further out
+  const turbineR = 0.22 + e * 0.08;    // rear turbine intakes widen
+
+  // Reusable material factories — body stays pure black; emissive boost
+  // only kicks in on hover/selection so the surface reads as deep black.
   const matBlack = (extra: number = 0): React.ReactElement => (
     <meshStandardMaterial
-      color="#08090c"
-      roughness={0.35}
-      metalness={0.85}
+      color="#02030a"
+      roughness={0.32}
+      metalness={0.92}
       emissive={ACCENT_COLOR}
-      emissiveIntensity={baselineEmissive + extra}
+      emissiveIntensity={extra}
     />
   );
   const matGloss = (extra: number = 0): React.ReactElement => (
     <meshStandardMaterial
-      color="#0a0c10"
-      roughness={0.2}
-      metalness={0.95}
+      color="#05060b"
+      roughness={0.18}
+      metalness={0.98}
       emissive={ACCENT_COLOR}
-      emissiveIntensity={baselineEmissive + extra}
+      emissiveIntensity={extra}
     />
   );
   const matRubber = (): React.ReactElement => (
@@ -171,13 +186,13 @@ export function BatmobileModel({
           <boxGeometry args={[2.2, 0.5, 4.8]} />
           {matGloss(partEmissive('chassis'))}
         </mesh>
-        {/* Front nose wedge */}
-        <mesh position={[0, 0.55, 2.7]} rotation={[-0.2, 0, 0]} castShadow>
-          <boxGeometry args={[2.0, 0.5, 1.4]} />
+        {/* Front nose wedge (lengthens with evolution) */}
+        <mesh position={[0, 0.55, 2.7 + noseExtend * 0.5]} rotation={[-0.2, 0, 0]} castShadow>
+          <boxGeometry args={[2.0, 0.5, 1.4 + noseExtend]} />
           {matBlack(partEmissive('chassis'))}
         </mesh>
-        {/* Nose tip */}
-        <mesh position={[0, 0.45, 3.35]} rotation={[-0.35, 0, 0]} castShadow>
+        {/* Nose tip (slides further out with evolution) */}
+        <mesh position={[0, 0.45, 3.35 + noseTipShift]} rotation={[-0.35, 0, 0]} castShadow>
           <boxGeometry args={[1.6, 0.35, 0.4]} />
           {matGloss(partEmissive('chassis'))}
         </mesh>
@@ -260,13 +275,13 @@ export function BatmobileModel({
           <boxGeometry args={[1.3, 0.08, 0.4]} />
           {matGloss(partEmissive('cockpit'))}
         </mesh>
-        {/* Antenna mast */}
-        <mesh position={[0.45, 1.85, -0.5]}>
-          <cylinderGeometry args={[0.025, 0.025, 0.5, 8]} />
+        {/* Antenna mast (taller at higher Mk) */}
+        <mesh position={[0.45, antennaY, -0.5]}>
+          <cylinderGeometry args={[0.025, 0.025, antennaH, 8]} />
           {matBlack(partEmissive('cockpit'))}
         </mesh>
-        {/* Antenna glowing tip */}
-        <mesh position={[0.45, 2.12, -0.5]}>
+        {/* Antenna glowing tip — red */}
+        <mesh position={[0.45, antennaTipY, -0.5]}>
           <sphereGeometry args={[0.05, 10, 10]} />
           <meshStandardMaterial
             color={ACCENT_COLOR}
@@ -286,20 +301,20 @@ export function BatmobileModel({
         onSelect={onSelect}
         labelPos={[1.4, 1.3, -1.4]}
       >
-        {/* Side intakes (front of rear wheels) */}
+        {/* Side intakes (front of rear wheels) — scale with evolution */}
         {[1.05, -1.05].map((x, idx) => (
           <mesh
             key={`intake-${idx}`}
             position={[x, 0.85, -0.6]}
             castShadow
           >
-            <boxGeometry args={[0.22, 0.28, 0.7]} />
+            <boxGeometry args={[0.22 * intakeScale, 0.28 * intakeScale, 0.7 * intakeScale]} />
             <meshStandardMaterial
               color="#020306"
               roughness={0.4}
               metalness={0.5}
               emissive={ACCENT_COLOR}
-              emissiveIntensity={baselineEmissive + partEmissive('engine')}
+              emissiveIntensity={partEmissive('engine')}
             />
           </mesh>
         ))}
@@ -319,7 +334,7 @@ export function BatmobileModel({
             />
           </mesh>
         ))}
-        {/* Turbine intake circles */}
+        {/* Turbine intake circles — widen with evolution */}
         {[0.55, -0.55].map((x, idx) => (
           <group key={`turbine-${idx}`}>
             <mesh
@@ -327,7 +342,7 @@ export function BatmobileModel({
               rotation={[Math.PI / 2, 0, 0]}
               castShadow
             >
-              <cylinderGeometry args={[0.22, 0.22, 0.18, 20]} />
+              <cylinderGeometry args={[turbineR, turbineR, 0.18, 20]} />
               {matBlack(partEmissive('engine'))}
             </mesh>
             {/* Inner turbine hub */}
@@ -453,29 +468,29 @@ export function BatmobileModel({
         onSelect={onSelect}
         labelPos={[0, 1.7, -2.6]}
       >
-        {/* Main wing */}
-        <mesh position={[0, 1.3, -2.55]} castShadow>
-          <boxGeometry args={[2.4, 0.08, 0.5]} />
+        {/* Main wing — rises higher and widens with evolution */}
+        <mesh position={[0, 1.3 + spoilerLift, -2.55]} castShadow>
+          <boxGeometry args={[spoilerWidth, 0.08, 0.5]} />
           {matBlack(partEmissive('spoiler'))}
         </mesh>
-        {/* Wing supports */}
+        {/* Wing supports — stretch upward to meet the rising wing */}
         {[0.55, -0.55].map((x, idx) => (
           <mesh
             key={`support-${idx}`}
-            position={[x, 1.22, -2.55]}
+            position={[x, 1.22 + spoilerLift * 0.5, -2.55]}
             castShadow
           >
-            <boxGeometry args={[0.06, 0.18, 0.18]} />
+            <boxGeometry args={[0.06, 0.18 + spoilerLift, 0.18]} />
             {matBlack(partEmissive('spoiler'))}
           </mesh>
         ))}
-        {/* End-cap fins */}
-        <mesh position={[1.18, 1.42, -2.55]} castShadow>
-          <boxGeometry args={[0.06, 0.34, 0.5]} />
+        {/* End-cap fins — taller at higher Mk */}
+        <mesh position={[spoilerWidth / 2 - 0.05, 1.42 + spoilerLift, -2.55]} castShadow>
+          <boxGeometry args={[0.06, spoilerFinH, 0.5]} />
           {matBlack(partEmissive('spoiler'))}
         </mesh>
-        <mesh position={[-1.18, 1.42, -2.55]} castShadow>
-          <boxGeometry args={[0.06, 0.34, 0.5]} />
+        <mesh position={[-(spoilerWidth / 2 - 0.05), 1.42 + spoilerLift, -2.55]} castShadow>
+          <boxGeometry args={[0.06, spoilerFinH, 0.5]} />
           {matBlack(partEmissive('spoiler'))}
         </mesh>
       </VehiclePart>
@@ -493,8 +508,8 @@ export function BatmobileModel({
         <mesh position={[0.65, 0.78, 3.3]}>
           <boxGeometry args={[0.45, 0.06, 0.05]} />
           <meshStandardMaterial
-            color="#FFD56A"
-            emissive="#FFD56A"
+            color={HEADLIGHT_COLOR}
+            emissive={HEADLIGHT_COLOR}
             emissiveIntensity={3.2 + partEmissive('headlights') * 2}
             toneMapped={false}
           />
@@ -502,8 +517,8 @@ export function BatmobileModel({
         <mesh position={[-0.65, 0.78, 3.3]}>
           <boxGeometry args={[0.45, 0.06, 0.05]} />
           <meshStandardMaterial
-            color="#FFD56A"
-            emissive="#FFD56A"
+            color={HEADLIGHT_COLOR}
+            emissive={HEADLIGHT_COLOR}
             emissiveIntensity={3.2 + partEmissive('headlights') * 2}
             toneMapped={false}
           />
@@ -515,7 +530,7 @@ export function BatmobileModel({
         >
           <coneGeometry args={[0.22, 0.7, 14, 1, true]} />
           <meshBasicMaterial
-            color="#FFD56A"
+            color={HEADLIGHT_COLOR}
             transparent
             opacity={isSelected('headlights') ? 0.5 : isHovered('headlights') ? 0.38 : 0.22}
             side={THREE.DoubleSide}
@@ -530,7 +545,7 @@ export function BatmobileModel({
         >
           <coneGeometry args={[0.22, 0.7, 14, 1, true]} />
           <meshBasicMaterial
-            color="#FFD56A"
+            color={HEADLIGHT_COLOR}
             transparent
             opacity={isSelected('headlights') ? 0.5 : isHovered('headlights') ? 0.38 : 0.22}
             side={THREE.DoubleSide}

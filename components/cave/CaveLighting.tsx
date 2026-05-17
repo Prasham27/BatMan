@@ -41,13 +41,22 @@ export function CaveLighting() {
         decay={1.4}
         color="#7090b0"
       />
-      {/* Additional warm fill above the Batmobile */}
+      {/* Cool overhead fill above the Batmobile — keeps the body reading
+          jet-black instead of amber-stained */}
       <pointLight
         position={[-9, 6, 1]}
-        intensity={2.5}
+        intensity={2.0}
         distance={10}
         decay={1.5}
-        color="#FFD56A"
+        color="#aabbd0"
+      />
+      {/* Subtle red rim from behind the Batmobile — futuristic accent */}
+      <pointLight
+        position={[-9, 3, -3]}
+        intensity={1.4}
+        distance={6}
+        decay={1.6}
+        color="#E63946"
       />
 
       {/* Cool fill on the surveillance drone */}

@@ -125,9 +125,9 @@ export function Batmobile({ onClick, disabled }: BatmobileProps) {
       <mesh position={[0.45, 2.12, -0.5]}>
         <sphereGeometry args={[0.04, 8, 8]} />
         <meshStandardMaterial
-          color="#FFB200"
-          emissive="#FFB200"
-          emissiveIntensity={hovered && !disabled ? 2.0 : 1.2}
+          color="#E63946"
+          emissive="#E63946"
+          emissiveIntensity={hovered && !disabled ? 2.4 : 1.4}
           toneMapped={false}
         />
       </mesh>
@@ -182,13 +182,13 @@ export function Batmobile({ onClick, disabled }: BatmobileProps) {
             <cylinderGeometry args={[0.075, 0.075, 0.25, 12]} />
             <meshStandardMaterial color="#15181c" roughness={0.4} metalness={0.7} />
           </mesh>
-          {/* Glow tip */}
+          {/* Glow tip — red */}
           <mesh position={[x, 0.6, -2.85]} rotation={[Math.PI / 2, 0, 0]}>
             <cylinderGeometry args={[0.06, 0.06, 0.04, 12]} />
             <meshStandardMaterial
-              color="#FFB200"
-              emissive="#FFB200"
-              emissiveIntensity={hovered && !disabled ? 3.0 : 2.0}
+              color="#E63946"
+              emissive="#E63946"
+              emissiveIntensity={hovered && !disabled ? 3.2 : 2.2}
               toneMapped={false}
             />
           </mesh>
@@ -219,8 +219,8 @@ export function Batmobile({ onClick, disabled }: BatmobileProps) {
       <mesh position={[0.65, 0.78, 3.3]}>
         <boxGeometry args={[0.45, 0.06, 0.05]} />
         <meshStandardMaterial
-          color="#FFD56A"
-          emissive="#FFD56A"
+          color="#cfe6ff"
+          emissive="#cfe6ff"
           emissiveIntensity={hovered && !disabled ? 4.0 : 2.5}
           toneMapped={false}
         />
@@ -228,8 +228,8 @@ export function Batmobile({ onClick, disabled }: BatmobileProps) {
       <mesh position={[-0.65, 0.78, 3.3]}>
         <boxGeometry args={[0.45, 0.06, 0.05]} />
         <meshStandardMaterial
-          color="#FFD56A"
-          emissive="#FFD56A"
+          color="#cfe6ff"
+          emissive="#cfe6ff"
           emissiveIntensity={hovered && !disabled ? 4.0 : 2.5}
           toneMapped={false}
         />
@@ -266,52 +266,52 @@ export function Batmobile({ onClick, disabled }: BatmobileProps) {
         </group>
       ))}
 
-      {/* ───── UNDERGLOW STRIP — bright amber, much more prominent ───── */}
+      {/* ───── UNDERGLOW STRIP — deep red, futuristic ───── */}
       <mesh position={[0, 0.08, 0]}>
         <boxGeometry args={[2.0, 0.04, 4.8]} />
         <meshBasicMaterial
-          color="#FFB200"
+          color="#E63946"
           transparent
-          opacity={hovered && !disabled ? 0.85 : 0.55}
+          opacity={hovered && !disabled ? 0.9 : 0.6}
           toneMapped={false}
         />
       </mesh>
-      {/* Underglow side strips (long thin lines of amber) */}
+      {/* Underglow side strips (long thin lines of red) */}
       <mesh position={[0, 0.04, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <planeGeometry args={[2.4, 5.4]} />
         <meshBasicMaterial
-          color="#FFB200"
+          color="#E63946"
           transparent
-          opacity={hovered && !disabled ? 0.5 : 0.32}
+          opacity={hovered && !disabled ? 0.55 : 0.34}
           toneMapped={false}
           side={THREE.DoubleSide}
         />
       </mesh>
 
       {/* ───── DEDICATED LIGHTS — make the Batmobile actually visible ───── */}
-      {/* Strong amber underglow point light — the "techy" glow under the car */}
+      {/* Strong red underglow point light — the "techy" red glow under the car */}
       <pointLight
         position={[0, 0.15, 0]}
         intensity={3.5}
         distance={5}
         decay={1.5}
-        color="#FFB200"
+        color="#E63946"
       />
       {/* Cool fill light from above — pick out the chassis surfaces */}
       <pointLight
         position={[0, 4, 0]}
-        intensity={2.2}
+        intensity={2.4}
         distance={6}
         decay={1.6}
         color="#aaccff"
       />
-      {/* Small front fill so headlights area reads */}
+      {/* Small front fill so headlights area reads cool, not warm */}
       <pointLight
         position={[0, 1, 3.5]}
         intensity={1.0}
         distance={3}
         decay={1.5}
-        color="#FFD56A"
+        color="#cfe6ff"
       />
 
       {/* Hover label */}

@@ -114,6 +114,17 @@ export function SuitModel({
   // body parts so the suit "feels" more advanced at higher Mk levels.
   const baselineEmissive = evolution * 0.18;
 
+  // ── Evolution-driven shape parameters (Mk ↑ = bigger silhouette) ──
+  const e = evolution; // 0..1
+  const capeScale = 1 + e * 0.55;        // cape billows wider + longer
+  const capeDrop = e * 0.35;             // cape hangs lower at higher Mk
+  const earH = 0.32 + e * 0.42;          // cowl ears grow taller
+  const earR = 0.06 + e * 0.04;          // base of the cone widens a bit
+  const earOffset = 0.16 + e * 0.05;     // ears spread slightly apart
+  const shoulderR = 0.22 + e * 0.075;    // pauldrons get bulkier
+  const shoulderX = 0.55 + e * 0.06;     // shoulder line widens
+  const chestBoost = 1 + e * 0.12;       // chest plate beefs up a touch
+
   const bodyMat = (extra: number = 0): React.ReactElement => (
     <meshStandardMaterial
       color={bodyColor}
@@ -251,7 +262,7 @@ export function SuitModel({
           {bodyMat(partEmissive('chest'))}
         </mesh>
         <mesh position={[0, 2.5, 0.32]} castShadow>
-          <boxGeometry args={[0.7, 0.85, 0.12]} />
+          <boxGeometry args={[0.7 * chestBoost, 0.85, 0.12 * chestBoost]} />
           <meshStandardMaterial
             color="#04050a"
             roughness={0.4}
@@ -275,8 +286,8 @@ export function SuitModel({
         onSelect={onSelect}
         labelPos={[0, 3.2, 0.3]}
       >
-        <mesh position={[0.55, 2.78, 0]} castShadow>
-          <sphereGeometry args={[0.22, 14, 14]} />
+        <mesh position={[shoulderX, 2.78, 0]} castShadow>
+          <sphereGeometry args={[shoulderR, 14, 14]} />
           <meshStandardMaterial
             color="#04050a"
             roughness={0.5}
@@ -285,8 +296,8 @@ export function SuitModel({
             emissiveIntensity={baselineEmissive + partEmissive('shoulders')}
           />
         </mesh>
-        <mesh position={[-0.55, 2.78, 0]} castShadow>
-          <sphereGeometry args={[0.22, 14, 14]} />
+        <mesh position={[-shoulderX, 2.78, 0]} castShadow>
+          <sphereGeometry args={[shoulderR, 14, 14]} />
           <meshStandardMaterial
             color="#04050a"
             roughness={0.5}
@@ -378,19 +389,19 @@ export function SuitModel({
           {bodyMat(partEmissive('cowl'))}
         </mesh>
         <mesh
-          position={[-0.16, 3.55, -0.02]}
+          position={[-earOffset, 3.39 + earH / 2, -0.02]}
           rotation={[0, 0, 0.32]}
           castShadow
         >
-          <coneGeometry args={[0.06, 0.32, 5]} />
+          <coneGeometry args={[earR, earH, 5]} />
           {bodyMat(partEmissive('cowl'))}
         </mesh>
         <mesh
-          position={[0.16, 3.55, -0.02]}
+          position={[earOffset, 3.39 + earH / 2, -0.02]}
           rotation={[0, 0, -0.32]}
           castShadow
         >
-          <coneGeometry args={[0.06, 0.32, 5]} />
+          <coneGeometry args={[earR, earH, 5]} />
           {bodyMat(partEmissive('cowl'))}
         </mesh>
         <mesh position={[0, 3.28, 0.24]}>
@@ -408,9 +419,9 @@ export function SuitModel({
         onSelect={onSelect}
         labelPos={[-1.2, 2.0, 0.4]}
       >
-        <mesh position={[0, 1.6, 0.18]} rotation={[0.05, 0, 0]} castShadow>
+        <mesh position={[0, 1.6 - capeDrop * 0.4, 0.18]} rotation={[0.05, 0, 0]} castShadow>
           <cylinderGeometry
-            args={[0.7, 1.4, 2.7, 22, 1, true, Math.PI * 0.55, Math.PI * 0.9]}
+            args={[0.7 * capeScale, 1.4 * capeScale, 2.7 + capeDrop * 1.8, 22, 1, true, Math.PI * 0.55, Math.PI * 0.9]}
           />
           <meshStandardMaterial
             color="#04050a"
@@ -422,11 +433,11 @@ export function SuitModel({
           />
         </mesh>
         <mesh
-          position={[-0.55, 1.9, 0.35]}
+          position={[-0.55 * capeScale, 1.9 - capeDrop * 0.3, 0.35]}
           rotation={[0, -0.4, 0.15]}
           castShadow
         >
-          <planeGeometry args={[0.9, 2.1, 4, 6]} />
+          <planeGeometry args={[0.9 * capeScale, 2.1 + capeDrop * 1.4, 4, 6]} />
           <meshStandardMaterial
             color="#04050a"
             roughness={0.78}
@@ -434,11 +445,11 @@ export function SuitModel({
           />
         </mesh>
         <mesh
-          position={[0.55, 1.9, 0.35]}
+          position={[0.55 * capeScale, 1.9 - capeDrop * 0.3, 0.35]}
           rotation={[0, 0.4, -0.15]}
           castShadow
         >
-          <planeGeometry args={[0.9, 2.1, 4, 6]} />
+          <planeGeometry args={[0.9 * capeScale, 2.1 + capeDrop * 1.4, 4, 6]} />
           <meshStandardMaterial
             color="#04050a"
             roughness={0.78}
