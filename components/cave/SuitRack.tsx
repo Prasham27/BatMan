@@ -191,8 +191,9 @@ export interface SuitRackProps {
 export function SuitRack({ onSelect, disabled, prototypeUnlocked }: SuitRackProps) {
   return (
     <>
-      {/* Main rack — left-foreground */}
-      <group position={[-6, 0, 4]}>
+      {/* Main rack — RIGHT side of cave, mirroring the Batmobile on the
+          left for visual balance and clear separation. */}
+      <group position={[12, 0, 4]} rotation={[0, -0.6, 0]}>
         <SuitDisplay
           position={[-1.8, 0, 0]}
           label="TACTICAL MK VII"

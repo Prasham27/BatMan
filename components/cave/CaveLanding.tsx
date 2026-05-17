@@ -7,7 +7,7 @@ import { MobileFallback } from './MobileFallback';
 import { CaveHUD } from './CaveHUD';
 import { DoorIntro } from './DoorIntro';
 import { BootSequence } from '@/components/effects/BootSequence';
-import { BatmobileStatus } from './hud/BatmobileStatus';
+import { BatmobileInspector } from './BatmobileInspector';
 import { SuitInspector } from './SuitInspector';
 import type { SuitId } from './SuitRack';
 
@@ -75,7 +75,8 @@ export function CaveLanding() {
     setPhase('live');
   }, []);
 
-  const openBatmobile = useCallback(() => setBatmobileOpen((v) => !v), []);
+  // Batmobile click now opens the full-screen Inspector
+  const openBatmobile = useCallback(() => setBatmobileOpen(true), []);
   const closeBatmobile = useCallback(() => setBatmobileOpen(false), []);
 
   const openSuit = useCallback((id: SuitId) => {
@@ -92,7 +93,6 @@ export function CaveLanding() {
       } catch {
         // noop
       }
-      // Trigger unlock toast if this completes the requirement set
       const willUnlock = REQUIRED_SUITS.every((s) => next.has(s));
       const wasUnlocked = REQUIRED_SUITS.every((s) => prev.has(s));
       if (willUnlock && !wasUnlocked) {
@@ -133,15 +133,13 @@ export function CaveLanding() {
         />
       </div>
       {phase === 'live' && (
-        <>
-          <CaveHUD
-            signalActive={signalActive}
-            onToggleSignal={toggleSignal}
-            unlockToast={unlockToast}
-          />
-          <BatmobileStatus visible={batmobileOpen} onClose={closeBatmobile} />
-        </>
+        <CaveHUD
+          signalActive={signalActive}
+          onToggleSignal={toggleSignal}
+          unlockToast={unlockToast}
+        />
       )}
+      <BatmobileInspector active={batmobileOpen} onClose={closeBatmobile} />
       <SuitInspector suit={activeSuit} onClose={closeSuit} />
       <DoorIntro
         active={phase === 'welcoming-door'}

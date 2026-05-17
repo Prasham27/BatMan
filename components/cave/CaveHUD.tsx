@@ -2,7 +2,6 @@
 
 import { WayneBranding } from './hud/WayneBranding';
 import { WelcomeBanner } from './hud/WelcomeBanner';
-import { BatcomputerNav } from './hud/BatcomputerNav';
 import { DroneStatus } from './hud/DroneStatus';
 import { RecentActivity } from './hud/RecentActivity';
 import { GothamTime } from './hud/GothamTime';
@@ -34,21 +33,19 @@ export function CaveHUD({
         <WelcomeBanner />
       </div>
 
-      {/* Right column: stacked panels */}
+      {/* Right column: stacked panels (Location moved here from bottom-left) */}
       <div className="absolute right-6 top-6 flex w-64 flex-col gap-3">
         <DroneStatus />
         <RecentActivity />
         <GothamTime />
         <SystemFeed />
+        <LocationPanel />
       </div>
 
-      {/* Bottom-left: location + facility status */}
-      <div className="absolute left-6 bottom-6 flex flex-col gap-2">
-        <LocationPanel />
-        <div className="font-mono text-[10px] tracking-widest text-text-muted">
-          <div>FACILITY-7 // OPERATIONAL</div>
-          <div className="text-signal">SYS // NOMINAL</div>
-        </div>
+      {/* Bottom-left: only the small facility/sys status now (cleaner left edge) */}
+      <div className="absolute left-6 bottom-6 font-mono text-[10px] tracking-widest text-text-muted">
+        <div>FACILITY-7 // OPERATIONAL</div>
+        <div className="text-signal">SYS // NOMINAL</div>
       </div>
 
       {/* Bottom-right: signal toggle + brand */}
@@ -73,9 +70,12 @@ export function CaveHUD({
         </div>
       </div>
 
-      {/* Bottom-center stack: nav + drag hint + tagline */}
+      {/* Bottom-center: subtle console hint (replaces the BatcomputerNav box) +
+          existing drag hint + tagline */}
       <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-3">
-        <BatcomputerNav />
+        <p className="pointer-events-none font-mono text-[11px] tracking-[0.3em] text-signal">
+          ↳ CLICK BATCOMPUTER TO ACCESS DATA
+        </p>
         <DragHint />
         <Tagline />
       </div>

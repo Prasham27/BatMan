@@ -32,13 +32,22 @@ export function CaveLighting() {
         castShadow
       />
 
-      {/* Cool fill on the Batmobile platform */}
+      {/* Cool fill on the Batmobile platform — much brighter so the
+          vehicle reads against the dark cave */}
       <pointLight
         position={[-9, 4, 1]}
-        intensity={1.6}
-        distance={9}
-        decay={1.6}
-        color="#5070a0"
+        intensity={4.5}
+        distance={14}
+        decay={1.4}
+        color="#7090b0"
+      />
+      {/* Additional warm fill above the Batmobile */}
+      <pointLight
+        position={[-9, 6, 1]}
+        intensity={2.5}
+        distance={10}
+        decay={1.5}
+        color="#FFD56A"
       />
 
       {/* Cool fill on the surveillance drone */}
